@@ -6,6 +6,11 @@ var app = {
     options: ['One', 'Two']
 };
 
+var addOption = function addOption(e) {
+    e.preventDefault();
+    console.log('Add Option funtion');
+};
+
 var template = React.createElement(
     'div',
     null,
@@ -40,7 +45,7 @@ var template = React.createElement(
     ),
     React.createElement(
         'form',
-        null,
+        { onSubmit: addOption },
         React.createElement('input', { type: 'text', name: 'option' }),
         React.createElement(
             'button',

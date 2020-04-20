@@ -5,22 +5,26 @@ const app = {
     options: ['One', 'Two']
 }
 
+const addOption = (e) => {
+    e.preventDefault()
+    console.log('Add Option funtion')
+}
 
-    const template = (
-        <div>
-            <h1>{app.title}</h1>
-            {app.subtitle && <p>{app.subtitle}</p>}
-            <p>{app.options.length > 0 ? 'Your Optios' : 'No Options'}</p>
-            <ol>
-                <li>Item one</li>
-                <li>Item two</li>
-            </ol>
-            <form>
-                <input type="text" name="option" />
-                <button>Add Option</button>
-            </form>
-        </div>
-    )
+const template = (
+    <div>
+        <h1>{app.title}</h1>
+        {app.subtitle && <p>{app.subtitle}</p>}
+        <p>{app.options.length > 0 ? 'Your Optios' : 'No Options'}</p>
+        <ol>
+            <li>Item one</li>
+            <li>Item two</li>
+        </ol>
+        <form onSubmit={addOption}>
+            <input type="text" name="option" />
+            <button>Add Option</button>
+        </form>
+    </div>
+)
  
 
 
