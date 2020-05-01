@@ -97,16 +97,20 @@ var Header = function (_React$Component3) {
 var Options = function (_React$Component4) {
     _inherits(Options, _React$Component4);
 
-    function Options() {
+    // run when component is initailized
+    function Options(props) {
         _classCallCheck(this, Options);
 
-        return _possibleConstructorReturn(this, (Options.__proto__ || Object.getPrototypeOf(Options)).apply(this, arguments));
+        var _this4 = _possibleConstructorReturn(this, (Options.__proto__ || Object.getPrototypeOf(Options)).call(this, props));
+
+        _this4.deleteOptions = _this4.deleteOptions.bind(_this4);
+        return _this4;
     }
 
     _createClass(Options, [{
         key: 'deleteOptions',
         value: function deleteOptions() {
-            console.log(console.log('clear options'));
+            console.log(this.props.options);
         }
     }, {
         key: 'render',
@@ -168,11 +172,13 @@ var AddOption = function (_React$Component6) {
     _createClass(AddOption, [{
         key: 'add',
         value: function add(e) {
+
             e.preventDefault();
-            if (e.target.elements.theOption.value) {
-                var theOption = e.target.elements.theOption.value;
-                console.log(theOption);
-            }
+
+            if (!e.target.elements.theOption.value) return;
+
+            var theOption = e.target.elements.theOption.value;
+            console.log(theOption);
         }
     }, {
         key: 'render',

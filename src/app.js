@@ -35,9 +35,17 @@ class Header extends React.Component {
 }
 
 class Options extends React.Component {
-    deleteOptions(){
-        console.log(console.log('clear options'))
+
+    // run when component is initailized
+    constructor(props){
+        super(props)
+        this.deleteOptions = this.deleteOptions.bind(this)
     }
+
+    deleteOptions(){
+        console.log(this.props.options)
+    }
+
     render(){
         return (
             <div>
