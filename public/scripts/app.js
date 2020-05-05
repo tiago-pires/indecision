@@ -11,27 +11,87 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var App = function (_React$Component) {
     _inherits(App, _React$Component);
 
-    function App() {
+    function App(props) {
         _classCallCheck(this, App);
 
-        return _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).apply(this, arguments));
+        var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
+
+        _this.deleteOptions = _this.deleteOptions.bind(_this);
+        _this.addOption = _this.addOption.bind(_this);
+        _this.pickOption = _this.pickOption.bind(_this);
+
+        _this.state = {
+            options: ['Thing one', 'Second thing', 'Thirdest thingy']
+        };
+        return _this;
     }
 
     _createClass(App, [{
+        key: 'deleteOptions',
+        value: function deleteOptions() {
+            this.setState(function () {
+                return {
+                    options: []
+                };
+            });
+        }
+    }, {
+        key: 'addOption',
+        value: function addOption(e) {
+
+            e.preventDefault();
+
+            if (!e.target.elements.optionInput.value) return;
+
+            var option = e.target.elements.optionInput.value;
+
+            this.setState(function (state) {
+
+                state.options.push(option);
+
+                return state;
+            });
+        }
+    }, {
+        key: 'pickOption',
+        value: function pickOption() {
+            var _this2 = this;
+
+            console.log('pcik option');
+            var randIndex = Math.floor(Math.random() * this.state.options.length);
+            console.log(randIndex);
+
+            this.setState(function (state) {
+                return {
+                    pickedOption: _this2.state.options[randIndex]
+                };
+            });
+        }
+    }, {
         key: 'render',
         value: function render() {
 
             var title = 'Indecision';
             var subtitle = 'Put your life in the hands of a compter';
-            var options = ['Thing one', 'Second thing', 'Thirdest thingy'];
 
             return React.createElement(
                 'div',
                 null,
                 React.createElement(Header, { title: title, subtitle: subtitle }),
-                React.createElement(Action, null),
-                React.createElement(Options, { options: options }),
-                React.createElement(AddOption, null)
+                React.createElement(Action, {
+                    hasOptions: this.state.options.length > 0,
+                    pickOption: this.pickOption
+                }),
+                this.state.pickedOption && React.createElement(
+                    'h2',
+                    null,
+                    this.state.pickedOption
+                ),
+                React.createElement(Options, {
+                    options: this.state.options,
+                    deleteOptions: this.deleteOptions
+                }),
+                React.createElement(AddOption, { addOption: this.addOption })
             );
         }
     }]);
@@ -42,10 +102,10 @@ var App = function (_React$Component) {
 var Action = function (_React$Component2) {
     _inherits(Action, _React$Component2);
 
-    function Action() {
+    function Action(props) {
         _classCallCheck(this, Action);
 
-        return _possibleConstructorReturn(this, (Action.__proto__ || Object.getPrototypeOf(Action)).apply(this, arguments));
+        return _possibleConstructorReturn(this, (Action.__proto__ || Object.getPrototypeOf(Action)).call(this, props));
     }
 
     _createClass(Action, [{
@@ -53,7 +113,7 @@ var Action = function (_React$Component2) {
         value: function render() {
             return React.createElement(
                 'button',
-                null,
+                { disabled: !this.props.hasOptions, onClick: this.props.pickOption },
                 ' What should I do?'
             );
         }
@@ -97,22 +157,13 @@ var Header = function (_React$Component3) {
 var Options = function (_React$Component4) {
     _inherits(Options, _React$Component4);
 
-    // run when component is initailized
     function Options(props) {
         _classCallCheck(this, Options);
 
-        var _this4 = _possibleConstructorReturn(this, (Options.__proto__ || Object.getPrototypeOf(Options)).call(this, props));
-
-        _this4.deleteOptions = _this4.deleteOptions.bind(_this4);
-        return _this4;
+        return _possibleConstructorReturn(this, (Options.__proto__ || Object.getPrototypeOf(Options)).call(this, props));
     }
 
     _createClass(Options, [{
-        key: 'deleteOptions',
-        value: function deleteOptions() {
-            console.log(this.props.options);
-        }
-    }, {
         key: 'render',
         value: function render() {
             return React.createElement(
@@ -127,7 +178,7 @@ var Options = function (_React$Component4) {
                 ),
                 React.createElement(
                     'button',
-                    { onClick: this.deleteOptions },
+                    { onClick: this.props.deleteOptions },
                     'Delete Options'
                 )
             );
@@ -170,23 +221,12 @@ var AddOption = function (_React$Component6) {
     }
 
     _createClass(AddOption, [{
-        key: 'add',
-        value: function add(e) {
-
-            e.preventDefault();
-
-            if (!e.target.elements.theOption.value) return;
-
-            var theOption = e.target.elements.theOption.value;
-            console.log(theOption);
-        }
-    }, {
         key: 'render',
         value: function render() {
             return React.createElement(
                 'form',
-                { onSubmit: this.add },
-                React.createElement('input', { type: 'text', name: 'theOption' }),
+                { onSubmit: this.props.addOption },
+                React.createElement('input', { type: 'text', name: 'optionInput' }),
                 React.createElement(
                     'button',
                     null,
