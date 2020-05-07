@@ -23,7 +23,11 @@ class App extends React.Component {
 
 	addOption(option){ 
 
-		if(!option) return
+		if(!option){
+			return 'option is empty'
+		} else if (this.state.options.indexOf(option) > -1) {
+			return `option ${option} already added`
+		} 
 
 		const updatedState = this.state.options.concat(option)
 
@@ -126,24 +130,33 @@ class AddOption extends React.Component {
 	constructor(props){
 		super(props)
 		this.addOption = this.addOption.bind(this)
+		this.state = {
+			error: undefined
+		}
 	}
 
 	addOption(e){
 
 		e.preventDefault()
+		const option = e.target.elements.optionInput.value.trim()
+		const error = this.props.addOption(option)
+			// return message or undefined
 
-		if(!e.target.elements.optionInput.value) return
+		console.log(error)
 
-		const option = e.target.elements.optionInput.value
-
-		this.props.addOption(option)
+		this.setState(()=>{
+			return {
+				error: error
+			}
+		})
 	}
 
     render(){
         return (
             <form onSubmit={this.addOption}>
-                <input type="text" name="optionInput"></input>
+                <input type="text" name="optionInput" defaultValue=""></input>
                 <button>Add Option</button>
+				{this.state.error && <div>{this.state.error}</div>}
             </form>
         )
     }
