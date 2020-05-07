@@ -75,54 +75,44 @@ class App extends React.Component {
     }
 }
 
-class Action extends React.Component {
-	
-	constructor(props){
-		super(props)
-	}
-
-    render(){
-        return <button disabled={!this.props.hasOptions} onClick={this.props.pickOption}> What should I do?</button>
-    }
+const Action = props => {
+    return (
+		<button 
+			disabled={!props.hasOptions} 
+			onClick={props.pickOption}
+		> 
+			What should I do?
+		
+		</button>)
 }
 
-class Header extends React.Component {
-    render(){
-        return (
-            <div>
-                <h1>{this.props.title}</h1>
-                <h2>{this.props.subtitle}</h2>
-            </div>
-        )
-    }
+
+const Header = props => {
+	return (
+		<div>
+			<h1>{props.title}</h1>
+			<h2>{props.subtitle}</h2>
+		</div>
+	)
 }
 
-class Options extends React.Component {
-
-    constructor(props){
-        super(props)
-    }
-
-    render(){
-        return (
-            <div>
-                <ul>
-                    {this.props.options.map(option => <Option key={option} text={option}/>)}
-                </ul>
-                <button onClick={this.props.deleteOptions}>Delete Options</button>
-            </div>   
-        )
-    }
+const Options = props => {
+	return (
+		<div>
+			<ul>
+				{props.options.map(option => <Option key={option} text={option}/>)}
+			</ul>
+			<button onClick={props.deleteOptions}>Delete Options</button>
+		</div>   
+	)
 }
 
-class Option extends React.Component {
-    render(){
-        return (
-            <li>
-                {this.props.text}
-            </li>
-        )
-    }
+const Option = props => {
+	return (
+		<li>
+			{props.text}
+		</li>
+	)
 }
 
 class AddOption extends React.Component {
