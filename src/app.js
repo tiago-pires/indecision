@@ -9,7 +9,7 @@ class App extends React.Component {
 		this.pickOption = this.pickOption.bind(this)
 
 		this.state = {
-			options: ['Thing one', 'Second thing', 'Thirdest thingy']
+			options: []
 		}
 	}
 
@@ -21,19 +21,17 @@ class App extends React.Component {
 		})
 	}
 
-	addOption(e){ 
- 
-		e.preventDefault()
+	addOption(option){ 
 
-		if(!e.target.elements.optionInput.value) return
+		if(!option) return
 
-		const option = e.target.elements.optionInput.value
+		const updatedState = this.state.options.concat(option)
 
 		this.setState(state => {
 
-			state.options.push(option)
-
-			return state
+			return {
+				options: updatedState
+			}
 			
 		})
 	}
@@ -125,9 +123,25 @@ class Option extends React.Component {
 
 class AddOption extends React.Component {
 
+	constructor(props){
+		super(props)
+		this.addOption = this.addOption.bind(this)
+	}
+
+	addOption(e){
+
+		e.preventDefault()
+
+		if(!e.target.elements.optionInput.value) return
+
+		const option = e.target.elements.optionInput.value
+
+		this.props.addOption(option)
+	}
+
     render(){
         return (
-            <form onSubmit={this.props.addOption}>
+            <form onSubmit={this.addOption}>
                 <input type="text" name="optionInput"></input>
                 <button>Add Option</button>
             </form>
