@@ -59,7 +59,7 @@ class App extends React.Component {
 
         return (
             <div>
-                <Header title={title} subtitle={subtitle} />
+                <Header subtitle={subtitle} />
 				<Action 
 					hasOptions={this.state.options.length > 0} 
 					pickOption={this.pickOption}	
@@ -91,9 +91,13 @@ const Header = props => {
 	return (
 		<div>
 			<h1>{props.title}</h1>
-			<h2>{props.subtitle}</h2>
+			{props.subtitle && <h2>{props.subtitle}</h2>}
 		</div>
 	)
+}
+
+Header.defaultProps = {
+	title: 'Indecision'
 }
 
 const Options = props => {
