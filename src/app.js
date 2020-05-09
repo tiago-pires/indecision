@@ -5,6 +5,7 @@ class App extends React.Component {
 		super(props)
 		
 		this.deleteOptions = this.deleteOptions.bind(this)
+		this.deleteOption = this.deleteOption.bind(this)
 		this.addOption = this.addOption.bind(this)
 		this.pickOption = this.pickOption.bind(this)
 
@@ -14,11 +15,18 @@ class App extends React.Component {
 	}
 
 	deleteOptions(){
-		this.setState(()=>{
-			return {
-				options: []
+		this.setState(() => ({ options: []}))
+	}
+
+	deleteOption(option){
+
+		this.setState(state => (
+			{
+				options: state.options.filter(item => {
+					return item != option
+				})
 			}
-		})
+		))
 	}
 
 	addOption(option){ 
@@ -68,6 +76,7 @@ class App extends React.Component {
 				<Options 
 					options={this.state.options} 
 					deleteOptions={this.deleteOptions}
+					deleteOption={this.deleteOption}
 				/>
                 <AddOption addOption={this.addOption} />
             </div>
@@ -104,7 +113,15 @@ const Options = props => {
 	return (
 		<div>
 			<ul>
-				{props.options.map(option => <Option key={option} text={option}/>)}
+				{
+					props.options.map(option => (
+						<Option 
+							key={option} 
+							text={option}
+							deleteOption={props.deleteOption}
+						/>
+					))
+				}
 			</ul>
 			<button onClick={props.deleteOptions}>Delete Options</button>
 		</div>   
@@ -112,9 +129,11 @@ const Options = props => {
 }
 
 const Option = props => {
+
 	return (
 		<li>
 			{props.text}
+			<button onClick={()=>{props.deleteOption(props.text)}}>Delete</button>
 		</li>
 	)
 }
@@ -138,11 +157,7 @@ class AddOption extends React.Component {
 
 		console.log(error)
 
-		this.setState(()=>{
-			return {
-				error: error
-			}
-		})
+		this.setState(()=>({ error }))
 	}
 
     render(){

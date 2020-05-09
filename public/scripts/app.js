@@ -17,6 +17,7 @@ var App = function (_React$Component) {
 		var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 
 		_this.deleteOptions = _this.deleteOptions.bind(_this);
+		_this.deleteOption = _this.deleteOption.bind(_this);
 		_this.addOption = _this.addOption.bind(_this);
 		_this.pickOption = _this.pickOption.bind(_this);
 
@@ -30,8 +31,18 @@ var App = function (_React$Component) {
 		key: 'deleteOptions',
 		value: function deleteOptions() {
 			this.setState(function () {
+				return { options: [] };
+			});
+		}
+	}, {
+		key: 'deleteOption',
+		value: function deleteOption(option) {
+
+			this.setState(function (state) {
 				return {
-					options: []
+					options: state.options.filter(function (item) {
+						return item != option;
+					})
 				};
 			});
 		}
@@ -91,7 +102,8 @@ var App = function (_React$Component) {
 				),
 				React.createElement(Options, {
 					options: this.state.options,
-					deleteOptions: this.deleteOptions
+					deleteOptions: this.deleteOptions,
+					deleteOption: this.deleteOption
 				}),
 				React.createElement(AddOption, { addOption: this.addOption })
 			);
@@ -141,7 +153,11 @@ var Options = function Options(props) {
 			'ul',
 			null,
 			props.options.map(function (option) {
-				return React.createElement(Option, { key: option, text: option });
+				return React.createElement(Option, {
+					key: option,
+					text: option,
+					deleteOption: props.deleteOption
+				});
 			})
 		),
 		React.createElement(
@@ -153,10 +169,18 @@ var Options = function Options(props) {
 };
 
 var Option = function Option(props) {
+
 	return React.createElement(
 		'li',
 		null,
-		props.text
+		props.text,
+		React.createElement(
+			'button',
+			{ onClick: function onClick() {
+					props.deleteOption(props.text);
+				} },
+			'Delete'
+		)
 	);
 };
 
@@ -187,9 +211,7 @@ var AddOption = function (_React$Component2) {
 			console.log(error);
 
 			this.setState(function () {
-				return {
-					error: error
-				};
+				return { error: error };
 			});
 		}
 	}, {
