@@ -8,13 +8,13 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var App = function (_React$Component) {
-	_inherits(App, _React$Component);
+var IndecisionApp = function (_React$Component) {
+	_inherits(IndecisionApp, _React$Component);
 
-	function App(props) {
-		_classCallCheck(this, App);
+	function IndecisionApp(props) {
+		_classCallCheck(this, IndecisionApp);
 
-		var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
+		var _this = _possibleConstructorReturn(this, (IndecisionApp.__proto__ || Object.getPrototypeOf(IndecisionApp)).call(this, props));
 
 		_this.deleteOptions = _this.deleteOptions.bind(_this);
 		_this.deleteOption = _this.deleteOption.bind(_this);
@@ -22,12 +22,12 @@ var App = function (_React$Component) {
 		_this.pickOption = _this.pickOption.bind(_this);
 
 		_this.state = {
-			options: []
+			options: props.options
 		};
 		return _this;
 	}
 
-	_createClass(App, [{
+	_createClass(IndecisionApp, [{
 		key: 'deleteOptions',
 		value: function deleteOptions() {
 			this.setState(function () {
@@ -58,7 +58,7 @@ var App = function (_React$Component) {
 
 			var updatedState = this.state.options.concat(option);
 
-			this.setState(function (state) {
+			this.setState(function (prevState) {
 
 				return {
 					options: updatedState
@@ -79,6 +79,29 @@ var App = function (_React$Component) {
 					pickedOption: _this2.state.options[randIndex]
 				};
 			});
+		}
+	}, {
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+
+			console.log('component did mount');
+
+			try {
+				var options = JSON.parse(localStorage.getItem('options'));
+				if (options) this.setState(function () {
+					return { options: options };
+				});
+			} catch (e) {
+				// handle error
+				console.log('error: ', localStorage.getItem('options'));
+			}
+		}
+	}, {
+		key: 'componentDidUpdate',
+		value: function componentDidUpdate(prevProps, prevState) {
+			console.log('component updated');
+			if (this.state.options.length === prevState.options.length) return;
+			localStorage.setItem('options', JSON.stringify(this.state.options));
 		}
 	}, {
 		key: 'render',
@@ -110,8 +133,12 @@ var App = function (_React$Component) {
 		}
 	}]);
 
-	return App;
+	return IndecisionApp;
 }(React.Component);
+
+IndecisionApp.defaultProps = {
+	options: []
+};
 
 var Action = function Action(props) {
 	return React.createElement(
@@ -149,18 +176,15 @@ var Options = function Options(props) {
 	return React.createElement(
 		'div',
 		null,
-		React.createElement(
-			'ul',
-			null,
-			props.options.map(function (option) {
-				return React.createElement(Option, {
-					key: option,
-					text: option,
-					deleteOption: props.deleteOption
-				});
-			})
-		),
-		React.createElement(
+		props.options.length === 0 && 'Add your options to get started',
+		props.options.map(function (option) {
+			return React.createElement(Option, {
+				key: option,
+				text: option,
+				deleteOption: props.deleteOption
+			});
+		}),
+		props.options.length !== 0 && React.createElement(
 			'button',
 			{ onClick: props.deleteOptions },
 			'Delete Options'
@@ -171,16 +195,16 @@ var Options = function Options(props) {
 var Option = function Option(props) {
 
 	return React.createElement(
-		'li',
+		'p',
 		null,
-		props.text,
 		React.createElement(
-			'button',
-			{ onClick: function onClick() {
+			'span',
+			{ style: { padding: '.5em' }, onClick: function onClick() {
 					props.deleteOption(props.text);
 				} },
-			'Delete'
-		)
+			'\xD7'
+		),
+		props.text
 	);
 };
 
@@ -206,13 +230,14 @@ var AddOption = function (_React$Component2) {
 			e.preventDefault();
 			var option = e.target.elements.optionInput.value.trim();
 			var error = this.props.addOption(option);
-			// return message or undefined
-
-			console.log(error);
 
 			this.setState(function () {
 				return { error: error };
 			});
+
+			if (!error) {
+				e.target.elements.optionInput.value = '';
+			}
 		}
 	}, {
 		key: 'render',
@@ -238,4 +263,4 @@ var AddOption = function (_React$Component2) {
 	return AddOption;
 }(React.Component);
 
-ReactDOM.render(React.createElement(App, null), document.getElementById('app'));
+ReactDOM.render(React.createElement(IndecisionApp, null), document.getElementById('app'));

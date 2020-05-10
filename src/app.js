@@ -1,5 +1,5 @@
 
-class App extends React.Component {
+class IndecisionApp extends React.Component {
 
 	constructor(props){
 		super(props)
@@ -10,7 +10,7 @@ class App extends React.Component {
 		this.pickOption = this.pickOption.bind(this)
 
 		this.state = {
-			options: []
+			options: props.options
 		}
 	}
 
@@ -39,7 +39,7 @@ class App extends React.Component {
 
 		const updatedState = this.state.options.concat(option)
 
-		this.setState(state => {
+		this.setState( prevState => {
 
 			return {
 				options: updatedState
@@ -58,6 +58,25 @@ class App extends React.Component {
 				pickedOption : this.state.options[randIndex]
 			}
 		})
+	}
+
+	componentDidMount(){
+
+		console.log('component did mount')
+
+		try {
+			const options = JSON.parse(localStorage.getItem('options'))
+			if(options) this.setState(() => ({ options }))
+		} catch (e){
+			// handle error
+			console.log('error: ', localStorage.getItem('options'))
+		}
+	}
+
+	componentDidUpdate(prevProps, prevState){
+		console.log('component updated')
+		if(this.state.options.length === prevState.options.length) return 
+		localStorage.setItem('options', JSON.stringify(this.state.options))
 	}
 
     render(){
@@ -83,6 +102,10 @@ class App extends React.Component {
         )
     }
 }
+
+IndecisionApp.defaultProps = {
+	options: []
+};
 
 const Action = props => {
     return (
@@ -112,18 +135,17 @@ Header.defaultProps = {
 const Options = props => {
 	return (
 		<div>
-			<ul>
-				{
-					props.options.map(option => (
-						<Option 
-							key={option} 
-							text={option}
-							deleteOption={props.deleteOption}
-						/>
-					))
-				}
-			</ul>
-			<button onClick={props.deleteOptions}>Delete Options</button>
+			{ props.options.length === 0 && 'Add your options to get started' }
+			
+			{ props.options.map(option => (
+					<Option 
+						key={option} 
+						text={option}
+						deleteOption={props.deleteOption}
+					/>
+				))
+			}
+			{props.options.length !== 0 && <button onClick={props.deleteOptions}>Delete Options</button>}
 		</div>   
 	)
 }
@@ -131,10 +153,10 @@ const Options = props => {
 const Option = props => {
 
 	return (
-		<li>
+		<p>
+			<span style={{padding:'.5em'}} onClick={()=>{props.deleteOption(props.text)}}>&times;</span>
 			{props.text}
-			<button onClick={()=>{props.deleteOption(props.text)}}>Delete</button>
-		</li>
+		</p>
 	)
 }
 
@@ -153,11 +175,12 @@ class AddOption extends React.Component {
 		e.preventDefault()
 		const option = e.target.elements.optionInput.value.trim()
 		const error = this.props.addOption(option)
-			// return message or undefined
-
-		console.log(error)
 
 		this.setState(()=>({ error }))
+
+		if(!error){
+			e.target.elements.optionInput.value = ''
+		}
 	}
 
     render(){
@@ -171,4 +194,4 @@ class AddOption extends React.Component {
     }
 }
 
-ReactDOM.render(<App />, document.getElementById('app'))
+ReactDOM.render(<IndecisionApp />, document.getElementById('app'))
