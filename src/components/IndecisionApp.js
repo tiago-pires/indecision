@@ -7,27 +7,17 @@ import Options from './Options'
 import Option from './Option'
 
 
-
 class IndecisionApp extends React.Component {
 
-	constructor(props){
-		super(props)
-		
-		this.deleteOptions = this.deleteOptions.bind(this)
-		this.deleteOption = this.deleteOption.bind(this)
-		this.addOption = this.addOption.bind(this)
-		this.pickOption = this.pickOption.bind(this)
-
-		this.state = {
-			options: props.options 
-		}
+	state = {
+		options: [] 
 	}
 
-	deleteOptions(){
+	deleteOptions = () => {
 		this.setState(() => ({ options: []}))
 	}
 
-	deleteOption(option){
+	deleteOption = (option) => {
 
 		this.setState(state => (
 			{
@@ -38,7 +28,7 @@ class IndecisionApp extends React.Component {
 		))
 	}
 
-	addOption(option){ 
+	addOption = (option) => { 
 
 		if(!option){
 			return 'option is empty'
@@ -57,7 +47,7 @@ class IndecisionApp extends React.Component {
 		})
 	}
 
-	pickOption(){
+	pickOption = () => {
 		console.log('pcik option')
 		const randIndex = Math.floor(Math.random() * this.state.options.length)
 		console.log(randIndex)		
